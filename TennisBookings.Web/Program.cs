@@ -18,6 +18,12 @@ namespace TennisBookings.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseDefaultServiceProvider(options =>
+                {
+                    // this is a bit resource intensive, but for development it's quite useful
+                    options.ValidateScopes = true;
+                }
+                )
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
