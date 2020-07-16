@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TennisBookings.Web.Configuration;
 using TennisBookings.Web.Services;
 
 namespace TennisBookings.Web
@@ -25,6 +26,8 @@ namespace TennisBookings.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IWeatherForecaster, WeatherForecaster>();
+
+            services.Configure<FeaturesConfiguration>(Configuration.GetSection("Features"));
 
             services.AddControllersWithViews();
         }
