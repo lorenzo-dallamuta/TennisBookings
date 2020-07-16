@@ -1,37 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using TennisBookings.Web.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using TennisBookings.Web.Services;
+using TennisBookings.Web.ViewModels;
 
 namespace TennisBookings.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
+        [Route("")]
         public IActionResult Index()
         {
-            return View();
-        }
+            var viewModel = new HomeViewModel();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+            var weatherForecaster = new WeatherForecaster();
+            var currentWeather = weatherForecaster.GetCurrentWeather();
+            
+            switch (currentWeather.WeatherCondition)
+            {
+                case WeatherCondition.Sun:
+                    viewModel.WeatherDescription = "It's sunny right now. " +
+                                                   "A great day for tennis.";
+                    break;
+                case WeatherCondition.Rain:
+                    viewModel.WeatherDescription = "We're sorry but it's raining " +
+                                                   "here. No outdoor courts in use.";
+                    break;
+                default:
+                    viewModel.WeatherDescription = "We don't have the latest weather " +
+                                                   "information right now, please check again later.";
+                    break;
+            }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(viewModel);
         }
     }
 }
